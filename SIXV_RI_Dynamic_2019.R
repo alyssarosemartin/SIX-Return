@@ -1,8 +1,18 @@
 library(raster)
 library(sp)
 library(rgdal)
-rm(list=ls())
-setwd("~/Documents/My Files/USA-NPN/Data/Analysis/R_default/SIXV/FLI_Anomalies")
+library(rnpn)
+library(curl)
+
+#Download 2018 and 2019 NCEP SI-x Leaf Anomaly rasters.
+curl_download("https://bit.ly/2MvnHOK", 'si-x_leaf_anomaly_ncep2018.tif', quiet = FALSE, mode = "wb")
+curl_download("https://bit.ly/2FV36C0", 'si-x_leaf_anomaly_ncep2019.tif', quiet = FALSE, mode = "wb")  
+
+#Download 1981-2017  SI-x Leaf Anomaly rasters. 
+for(year in 1981:2017){
+  npn_download_geospatial('si-x:leaf_anomaly_historic', paste0(year,'-01-01'),output_path=paste0("si-x_leaf_anomaly_prism",year,".tif"))
+}
+
 SIXA81 <- raster("si-x_leaf_anomaly_prism1981.tif ")
 SIXA82 <- raster("si-x_leaf_anomaly_prism1982.tif ")
 SIXA83 <- raster("si-x_leaf_anomaly_prism1983.tif ")
@@ -144,60 +154,60 @@ SIXA18Earlier<- overlay(SIXA18_4k, SIXA19_4k_Early, fun=f)
 
 #Plot example earlier than 2019 map to check.
 plot(SIXA85Earlier,
-  main="Where X Year As Early or Earlier than 2019")
+     main="Where X Year As Early or Earlier than 2019")
 
 #Early Return Interval, step 2: Calculate return interval by dividng the number of years by the sum of "as-early/earlier than" 2019 maps.
 SIXA_2019_RI_Early<- overlay(SIXA81Earlier,
-                      SIXA82Earlier,
-                      SIXA83Earlier,
-                      SIXA84Earlier,
-                      SIXA85Earlier,
-                      SIXA86Earlier,
-                      SIXA87Earlier,
-                      SIXA88Earlier,
-                      SIXA89Earlier,
-                      SIXA90Earlier,
-                      SIXA91Earlier,
-                      SIXA92Earlier,
-                      SIXA93Earlier,
-                      SIXA94Earlier,
-                      SIXA95Earlier,
-                      SIXA96Earlier,
-                      SIXA97Earlier,
-                      SIXA98Earlier,
-                      SIXA99Earlier,
-                      SIXA00Earlier,
-                      SIXA01Earlier,
-                      SIXA02Earlier,
-                      SIXA03Earlier,
-                      SIXA04Earlier,
-                      SIXA05Earlier,
-                      SIXA06Earlier,
-                      SIXA07Earlier,
-                      SIXA08Earlier,
-                      SIXA09Earlier,
-                      SIXA10Earlier,
-                      SIXA11Earlier,
-                      SIXA12Earlier,
-                      SIXA13Earlier,
-                      SIXA14Earlier,
-                      SIXA15Earlier,
-                      SIXA16Earlier,
-                      SIXA17Earlier,
-                      SIXA18Earlier,
-                      fun=function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38){return(38/(r1+r2+r3+r4+r5+r6+r7+r8+r9+r10+r11+r12+r13+r14+r15+r16+r17+r18+r19+r20+r21+r22+r23+r24+r25+r26+r27+r28+r29+r30+r31+r32+r33+r34+r35+r36+r37+r38))})
-  
+                             SIXA82Earlier,
+                             SIXA83Earlier,
+                             SIXA84Earlier,
+                             SIXA85Earlier,
+                             SIXA86Earlier,
+                             SIXA87Earlier,
+                             SIXA88Earlier,
+                             SIXA89Earlier,
+                             SIXA90Earlier,
+                             SIXA91Earlier,
+                             SIXA92Earlier,
+                             SIXA93Earlier,
+                             SIXA94Earlier,
+                             SIXA95Earlier,
+                             SIXA96Earlier,
+                             SIXA97Earlier,
+                             SIXA98Earlier,
+                             SIXA99Earlier,
+                             SIXA00Earlier,
+                             SIXA01Earlier,
+                             SIXA02Earlier,
+                             SIXA03Earlier,
+                             SIXA04Earlier,
+                             SIXA05Earlier,
+                             SIXA06Earlier,
+                             SIXA07Earlier,
+                             SIXA08Earlier,
+                             SIXA09Earlier,
+                             SIXA10Earlier,
+                             SIXA11Earlier,
+                             SIXA12Earlier,
+                             SIXA13Earlier,
+                             SIXA14Earlier,
+                             SIXA15Earlier,
+                             SIXA16Earlier,
+                             SIXA17Earlier,
+                             SIXA18Earlier,
+                             fun=function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38){return(38/(r1+r2+r3+r4+r5+r6+r7+r8+r9+r10+r11+r12+r13+r14+r15+r16+r17+r18+r19+r20+r21+r22+r23+r24+r25+r26+r27+r28+r29+r30+r31+r32+r33+r34+r35+r36+r37+r38))})
+
 #Plot return interval map.
 plot(SIXA_2019_RI_Early,
-  main="Return Interval for Early Spring, 2019, over 1981-2018 period")
-                        
+     main="Return Interval for Early Spring, 2019, over 1981-2018 period")
+
 #Output the raster of the Return interval (note that this lands in your working directory unless you specify something else)
-writeRaster(SIXA_2019_RI_Early, "2019_RI.tiff",
+writeRaster(SIXA_2019_RI_Early, "2019_RI_Early.tiff",
             format="GTiff",  # specify output format - GeoTIFF
             overwrite=TRUE, # CAUTION: if this is true, it will overwrite an
-                            # existing file
+            # existing file
             NAflag=-9999) # set no data value to -9999
- 
+
 #Now, for Late Return Interval, step 1: Create overlays where 1 = spring in X year was as LATE or LATER than 2019, otherwise 0.
 f <- function(r1, r2)  ifelse(r1 <= r2, 1,  0)
 SIXA81Later<- overlay(SIXA81, SIXA19_4k_Late, fun=f)
@@ -245,51 +255,51 @@ plot(SIXA05Later,
 
 #Late Return Interval, step 2: Calculate return interval by dividng the number of years by the sum of the later than 2019 maps.
 SIXA_2019_RI_Late<- overlay(SIXA81Later,
-                             SIXA82Later,
-                             SIXA83Later,
-                             SIXA84Later,
-                             SIXA85Later,
-                             SIXA86Later,
-                             SIXA87Later,
-                             SIXA88Later,
-                             SIXA89Later,
-                             SIXA90Later,
-                             SIXA91Later,
-                             SIXA92Later,
-                             SIXA93Later,
-                             SIXA94Later,
-                             SIXA95Later,
-                             SIXA96Later,
-                             SIXA97Later,
-                             SIXA98Later,
-                             SIXA99Later,
-                             SIXA00Later,
-                             SIXA01Later,
-                             SIXA02Later,
-                             SIXA03Later,
-                             SIXA04Later,
-                             SIXA05Later,
-                             SIXA06Later,
-                             SIXA07Later,
-                             SIXA08Later,
-                             SIXA09Later,
-                             SIXA10Later,
-                             SIXA11Later,
-                             SIXA12Later,
-                             SIXA13Later,
-                             SIXA14Later,
-                             SIXA15Later,
-                             SIXA16Later,
-                             SIXA17Later,
-                             SIXA18Later,
-                             fun=function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38){return(38/(r1+r2+r3+r4+r5+r6+r7+r8+r9+r10+r11+r12+r13+r14+r15+r16+r17+r18+r19+r20+r21+r22+r23+r24+r25+r26+r27+r28+r29+r30+r31+r32+r33+r34+r35+r36+r37+r38))})
+                            SIXA82Later,
+                            SIXA83Later,
+                            SIXA84Later,
+                            SIXA85Later,
+                            SIXA86Later,
+                            SIXA87Later,
+                            SIXA88Later,
+                            SIXA89Later,
+                            SIXA90Later,
+                            SIXA91Later,
+                            SIXA92Later,
+                            SIXA93Later,
+                            SIXA94Later,
+                            SIXA95Later,
+                            SIXA96Later,
+                            SIXA97Later,
+                            SIXA98Later,
+                            SIXA99Later,
+                            SIXA00Later,
+                            SIXA01Later,
+                            SIXA02Later,
+                            SIXA03Later,
+                            SIXA04Later,
+                            SIXA05Later,
+                            SIXA06Later,
+                            SIXA07Later,
+                            SIXA08Later,
+                            SIXA09Later,
+                            SIXA10Later,
+                            SIXA11Later,
+                            SIXA12Later,
+                            SIXA13Later,
+                            SIXA14Later,
+                            SIXA15Later,
+                            SIXA16Later,
+                            SIXA17Later,
+                            SIXA18Later,
+                            fun=function(r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38){return(38/(r1+r2+r3+r4+r5+r6+r7+r8+r9+r10+r11+r12+r13+r14+r15+r16+r17+r18+r19+r20+r21+r22+r23+r24+r25+r26+r27+r28+r29+r30+r31+r32+r33+r34+r35+r36+r37+r38))})
 
 #Plot return interval map.
 plot(SIXA_2019_RI_Late,
      main="Dynamic Return Interval for Late Spring, 2019, over 1981-2018 period")
 
 #Output the raster of the Return interval
-writeRaster(SIXA_2019_RI_Late, "2018_RI_Late.tiff",
+writeRaster(SIXA_2019_RI_Late, "2019_RI_Late.tiff",
             format="GTiff",  # specify output format - GeoTIFF
             overwrite=TRUE, # CAUTION: if this is true, it will overwrite an
             # existing file
