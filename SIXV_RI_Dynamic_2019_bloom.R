@@ -19,10 +19,10 @@ files <- list.files(getwd(),pattern="*m.tif")
 SIXA_stack <- stack(files) 
 NAvalue(SIXA_stack) <- -9999
 SIXA_stack
-plot(SIXA_stack[[17:33]])
+plot(SIXA_stack[[17:30]])
 
 #Call the 2019 raster, set NA, resample to match the PRISM stack and plot to check.
-SIXA19 <- raster("2019si-x_bloom_anomalyncep.tif")
+SIXA19 <- raster("2019si-x_bloom_anomaly_ncep.tif")
 NAvalue(SIXA19) <- -9999
 SIXA19_4k <-resample(SIXA19, SIXA_stack, method='bilinear') 
 plot(SIXA19_4k)
@@ -34,7 +34,7 @@ plot(SIXA19_4k_OnTime)
 
 #Output the OnTime Raster for use in QGIS.
 setwd("~/Documents/My Files/USA-NPN/Data/Analysis/R_default/SIXV/OutputRasters/CurrentY_DynRI/Bloom/")
-writeRaster(SIXA19_4k_OnTime, "2019_Anom_OnTime_3-31.tiff", format="GTiff",overwrite=TRUE, NAflag=-9999) 
+writeRaster(SIXA19_4k_OnTime, "2019_Anom_OnTime_bloom.tiff", format="GTiff",overwrite=TRUE, NAflag=-9999) 
 
 #Create an "Early" 2019 raster where all late or on-time pixels are null.
 f <- function(r1)  ifelse(r1 <= -0.0000001, r1,  NA)

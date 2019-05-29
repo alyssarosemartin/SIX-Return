@@ -34,7 +34,7 @@ plot(SIXA19_4k_OnTime)
 
 #Output the OnTime Raster for use in QGIS.
 setwd("~/Documents/My Files/USA-NPN/Data/Analysis/R_default/SIXV/OutputRasters/CurrentY_DynRI/Leaf/")
-writeRaster(SIXA19_4k_OnTime, "2019_Anom_OnTime_3-31.tiff", format="GTiff",  overwrite=TRUE, NAflag=-9999) 
+writeRaster(SIXA19_4k_OnTime, "2019_Anom_OnTime_leaf.tiff", format="GTiff",  overwrite=TRUE, NAflag=-9999) 
 
 #Create an "Early" 2019 raster where all late or on-time pixels are null.
 f <- function(r1)  ifelse(r1 <= -0.0000001, r1,  NA)
