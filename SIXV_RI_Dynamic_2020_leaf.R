@@ -65,8 +65,8 @@ plot(SIXA_stack_Earlier[[37]],
 SIXA_Earlier_count <-sum(SIXA_stack_Earlier)
 plot(SIXA_Earlier_count)
 
-#Early RI - Step 3, divide count raster by 38 to create Return Interval raster.
-f <- function(r1)  ifelse(r1 == 0, r1,  38/r1)
+#Early RI - Step 3, divide count raster by 39 to create Return Interval raster.
+f <- function(r1)  ifelse(r1 == 0, r1,  39/r1)
 RI_Early<- overlay(SIXA_Earlier_count, fun=f)
 plot(RI_Early)
 
@@ -85,8 +85,8 @@ plot(SIXA_stack_Later[[35]],
 SIXA_Later_count <-sum(SIXA_stack_Later)
 plot(SIXA_Later_count)
 
-#Late RI - Step 3, divide count raster by 38 to create Return Interval raster.
-f <- function(r1)  ifelse(r1 == 0, r1,  38/r1)
+#Late RI - Step 3, divide count raster by 39 to create Return Interval raster.
+f <- function(r1)  ifelse(r1 == 0, r1,  39/r1)
 RI_Late<- overlay(SIXA_Later_count, fun=f)
 plot(RI_Late)
 
